@@ -20,7 +20,7 @@ int count_letters(string input)
 //Letters can be any uppercase or lowercase alphabetic characters, but shouldn’t include any punctuation, digits, or other symbols.
 {
     int count = 0;
-    for (int i = 0 ; i < strlen(input) ; i++)
+    for (int i = 0, n = strlen(input) ; i < n ; i++)
     {
         if (isalpha(input[i]))
         {
@@ -37,7 +37,7 @@ int count_words(string input)
         return 0;
     }
     int count = 1;
-    for (int i = 0 ; i < strlen(input) ; i++)
+    for (int i = 0, n = strlen(input) ; i < n ; i++)
     {
         if (input[i] == ' ')
         {
@@ -51,7 +51,7 @@ int count_sentences(string input)
 // considered any sequence of characters that ends with a . or a ! or a ? to be a sentence
 {
     int count = 0;
-    for (int i = 0 ; i < strlen(input) ; i++)
+    for (int i = 0, n = strlen(input) ; i < n ; i++)
     {
         if (input[i] == '.' || input[i] == '!' || input[i] == '?')
         {
