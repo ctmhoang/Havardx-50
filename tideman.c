@@ -1,5 +1,6 @@
 #include <cs50.h>
 #include <stdio.h>
+#include <string.h>
 
 // Max number of candidates
 #define MAX 9
@@ -32,6 +33,7 @@ void add_pairs(void);
 void sort_pairs(void);
 void lock_pairs(void);
 void print_winner(void);
+bool isCycle(int loserIdx, int winnerIdx);
 
 int main(int argc, string argv[])
 {
@@ -155,6 +157,29 @@ void add_pairs(void)
 void sort_pairs(void)
 {
     // TODO
+    // Selection sort
+    int maxStr = 0, maxStrIdx;
+    pair maxStrPair;
+    for(int i = 0; i < pair_count; i++)
+    {
+        // Linear search
+        // Find the most powerful strength of victory
+        for(int j = i; j < pair_count; j++)
+        {
+            int strength = preferences[pairs[j].winner] - preferences[pairs[j].loser];
+            if(strength > maxStr)
+            {
+                maxStr = strength;
+                maxStrPair = pairs[i];
+                maxStrIdx = i;
+            }
+        }
+        // Swap
+        pair tempPair = pairs[i];
+        pairs[i] = maxStrPair;
+        pairs[maxStrIdx] = tempPair;
+        maxStr = 0;
+    }
     return;
 }
 
@@ -162,13 +187,64 @@ void sort_pairs(void)
 void lock_pairs(void)
 {
     // TODO
+    for(int i = 0; i < pair_count; i ++)
+    {
+        int winnerIdx = pairs[i].winner;
+        int loserIdx = pairs[i].loser;
+        if(!isCycle(loserIdx, winnerIdx))
+        {
+            locked[winnerIdx][loserIdx] = true;
+        }
+    }
     return;
 }
 
+//Detect cycles
+bool isCycle(int loserIdx, int winnerIdx)
+{
+    //Find winnerIdx
+    int cmpIdx = loserIdx;
+    for(int i = 0 ; i < pair_count; i++)
+    {
+        if(pairs[i].winner == loserIdx)
+        {
+            loserIdx = pairs[i].loser;
+            break;
+        }
+    }
+    if(cmpIdx == loserIdx)
+    {
+        //No winner found => No edge to form a cycle
+        return false;
+    }
+    else
+    {
+        if(loserIdx == winnerIdx)
+        {
+            // if it forms a cycle
+            return true;
+        }
+        else
+        {
+            return isCycle(loserIdx, winnerIdx);
+        }
+
+    }
+}
 // Print the winner of the election
 void print_winner(void)
 {
     // TODO
+    for(int i = 0; i < pair_count; i++)
+    {
+        candidates[pairs[i].loser] = "0";
+    }
+    for(int i = 0 ; i < candidate_count; i++)
+    {
+        if(strcmp(candidates[i], "0") != 0)
+        {
+            printf("%s",candidates[i]);
+        }
+    }
     return;
 }
-
