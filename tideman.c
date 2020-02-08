@@ -211,13 +211,16 @@ bool isCycle(int loserIdx, int winnerIdx)
     }
     else
     {
-        //Travel over all candidates
-        for(int i = 0 ; i < candidate_count; i++)
+        //Travel over all pairs
+        for(int i = 0 ; i < pair_count; i++)
         {
-            if(i == loserIdx || i == winnerIdx) continue;
-            else if(locked[loserIdx][i] && isCycle(i, winnerIdx)) //update loserIdx to next node :))
+            if(pairs[i].winner == loserIdx)
             {
-                return true;
+                int loserOfLoser = pairs[i].loser;
+                if(locked[loserIdx][loserOfLoser] && isCycle(loserOfLoser, winnerIdx)) //if locked yet && update loserIdx to next node :))
+                {
+                    return true;
+                }
             }
         }
     }
