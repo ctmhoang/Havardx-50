@@ -161,27 +161,26 @@ void sort_pairs(void)
 {
     // TODO
     // Selection sort
-    int maxStr = 0, maxStrIdx;
-    pair maxStrPair;
-    for(int i = 0; i < pair_count; i++)
+    for(int i = 0; i < pair_count - 1; i++)
     {
+        int maxStrIdx = i, maxStr = preferences[pairs[i].winner][pairs[i].loser] - preferences[pairs[i].loser][pairs[i].winner];
+        pair maxStrPair= pairs[i];
         // Linear search
         // Find the most powerful strength of victory
-        for(int j = i; j < pair_count; j++)
+        for(int j = i + 1; j < pair_count; j++)
         {
-            int strength = preferences[pairs[j].winner] - preferences[pairs[j].loser];
+            int strength = preferences[pairs[j].winner][pairs[j].loser] - preferences[pairs[j].loser][pairs[j].winner];
             if(strength > maxStr)
             {
                 maxStr = strength;
-                maxStrPair = pairs[i];
-                maxStrIdx = i;
+                maxStrPair = pairs[j];
+                maxStrIdx = j;
             }
         }
         // Swap
         pair tempPair = pairs[i];
         pairs[i] = maxStrPair;
         pairs[maxStrIdx] = tempPair;
-        maxStr = 0;
     }
     return;
 }
@@ -206,32 +205,37 @@ void lock_pairs(void)
 bool isCycle(int loserIdx, int winnerIdx)
 {
     //Find winnerIdx
-    int cmpIdx = loserIdx;
+    int cmpIdx[pair_count - 1];
+    memset( cmpIdx, -1, (pair_count - 1)*sizeof(int));
+    int countCase = 0;
+    //Update case has loserIdx win over someone
     for(int i = 0 ; i < pair_count; i++)
     {
         if(pairs[i].winner == loserIdx)
         {
-            loserIdx = pairs[i].loser;
-            break;
+            cmpIdx[countCase] = pairs[i].loser;
+            countCase ++;
         }
     }
-    if(cmpIdx == loserIdx)
+    if(!countCase) //No more case
     {
-        //No winner found => No edge to form a cycle
+        if(loserIdx == winnerIdx)
+        {
+            return true;
+        }
         return false;
     }
     else
     {
-        if(loserIdx == winnerIdx)
+        bool res = false;
+        for(int i = 0 ; i < countCase; i++)
         {
-            // if it forms a cycle
-            return true;
+            if(cmpIdx[i] != -1) //should always true
+            {
+                res += isCycle(cmpIdx[i],winnerIdx);
+            }
         }
-        else
-        {
-            return isCycle(loserIdx, winnerIdx);
-        }
-
+        return res;
     }
 }
 // Print the winner of the election
