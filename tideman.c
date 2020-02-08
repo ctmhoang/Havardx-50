@@ -204,53 +204,42 @@ void lock_pairs(void)
 //Detect cycles
 bool isCycle(int loserIdx, int winnerIdx)
 {
-    //Find winnerIdx
-    int cmpIdx[pair_count - 1];
-    memset( cmpIdx, -1, (pair_count - 1)*sizeof(int));
-    int countCase = 0;
-    //Update case has loserIdx win over someone
-    for(int i = 0 ; i < pair_count; i++)
+    // TODO
+    if(locked[loserIdx][winnerIdx])
     {
-        if(pairs[i].winner == loserIdx)
-        {
-            cmpIdx[countCase] = pairs[i].loser;
-            countCase ++;
-        }
-    }
-    if(!countCase) //No more case
-    {
-        if(loserIdx == winnerIdx)
-        {
-            return true;
-        }
-        return false;
+        return true;
     }
     else
     {
-        bool res = false;
-        for(int i = 0 ; i < countCase; i++)
+        //Travel over all candidates
+        for(int i = 0 ; i < candidate_count; i++)
         {
-            if(cmpIdx[i] != -1) //should always true
+            if(i == loserIdx || i == winnerIdx) continue;
+            else if(locked[loserIdx][i] && isCycle(i, winnerIdx)) //update loserIdx to next node :))
             {
-                res += isCycle(cmpIdx[i],winnerIdx);
+                return true;
             }
         }
-        return res;
     }
+    return false;
 }
 // Print the winner of the election
 void print_winner(void)
 {
     // TODO
-    for(int i = 0; i < pair_count; i++)
-    {
-        candidates[pairs[i].loser] = "0";
-    }
     for(int i = 0 ; i < candidate_count; i++)
     {
-        if(strcmp(candidates[i], "0") != 0)
+        int is_winner = true;
+        for(int j = 0; j < pair_count; j++)
         {
-            printf("%s",candidates[i]);
+            if(locked[j][i])
+            {
+                is_winner = false;
+            }
+        }
+        if(is_winner)
+        {
+            printf("\n%s",candidates[i]);
         }
     }
     return;
