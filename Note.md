@@ -1,7 +1,7 @@
-# Week 1
+# Lecture 1
 ## Over Flow
 ## Floating point imprecision
-# Week 2
+# Lecture 2
 ## Compiling
 ### Pre-proccessing
 Starting with the hash symbol are actually sort of replaced
@@ -17,3 +17,7 @@ get linked together, sort of commingled, into one big file
 ## const
 ## volatile
 ## arguments in main
+# Lecture 3
+## typedef
+## struct
+## Big O/Omega
