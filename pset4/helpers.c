@@ -18,3 +18,35 @@ void grayscale(int height, int width, RGBTRIPLE image[height][width])
         }
     }
 }
+
+void swapRGBt(RGBTRIPLE *pixel, RGBTRIPLE *oPixel)
+{
+    RGBTRIPLE tmp;
+
+    tmp.rgbtBlue = pixel->rgbtBlue;
+    tmp.rgbtGreen = pixel->rgbtGreen;
+    tmp.rgbtRed = pixel->rgbtRed;
+
+    pixel->rgbtBlue = oPixel->rgbtBlue;
+    pixel->rgbtGreen = oPixel->rgbtGreen;
+    pixel->rgbtRed = oPixel->rgbtRed;
+
+    oPixel->rgbtBlue = tmp.rgbtBlue;
+    oPixel->rgbtGreen = tmp.rgbtGreen;
+    oPixel->rgbtRed = tmp.rgbtRed;
+}
+
+// Reflect image horizontally
+void reflect(int height, int width, RGBTRIPLE image[height][width])
+{
+    for(int i = 0; i < height; i++)
+    {
+        for(int j = 0; j < width / 2; j++)
+        {
+            RGBTRIPLE *mPixel  = &image[i][j];
+            RGBTRIPLE *pixel  = &image[i][width - j - PADDING];
+
+            swapRGBt(mPixel, pixel);
+        }
+    }
+}
